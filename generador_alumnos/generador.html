@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generador de alumnos</title>
+    <script src="./js/functions.js"></script>
+</head>
+
+<body>
+    numero de registros: <input type="number" id="registros" value="1" min="1" max="50000">
+    <input type="button" value="Registros 1" onclick="document.getElementById('registros').value=1;">
+    <input type="button" value="Registros 50000" onclick="document.getElementById('registros').value=50000;">
+    tipo de archivo <Select id="opcion">
+        <option value="1">SQL MySQL/MariaDB</option>
+        <option value="2">Postgresql</option>
+        <option value="3">CSV</option>
+        <option value="4">JSON</option>
+    </Select>
+    <input type="button" value="Generar" onclick="generar()">
+    <p id="salida"></p>
+</body>
+
+</html>
