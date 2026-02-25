@@ -1,4 +1,6 @@
-const apellidosMexico = [
+var contenidoGenerado = "";
+
+const apellidosPaternos = [
     "Villanueva", "Valenzuela", "Paz", "Escobedo", "Figueroa", "Pizarro",
     "Cota", "Félix", "Gastélum", "Encinas", "Beltrán", "Leyva", "Arce",
     "Obregón", "Tapia", "Montoya", "Escalante", "Quintero", "Murillo",
@@ -11,7 +13,7 @@ const apellidosMexico = [
     "Elizondo", "Fabela", "Godínez", "Hinojosa", "Jaimes", "Ledesma"
 ];
 
-const apellidosAlemanes = [
+const apellidosMaternos = [
     "NULL", "Müller", "Schmidt", "Schneider", "Fischer", "Weber",
     "Meyer", "Wagner", "Becker", "Schulz", "Hoffmann", "Schäfer",
     "Koch", "Bauer", "Richter", "Klein", "Wolf", "Schröder", "Neumann",
@@ -22,7 +24,7 @@ const apellidosAlemanes = [
     "Stein", "Jäger", "Otto", "Sommer", "Groß"
 ];
 
-const nombresMexicanos = [
+const nombresPrimarios = [
     "Joaquín", "Mateo", "Vicente", "Alonso", "Tadeo", "Patricio",
     "Renato", "Simón", "Elio", "Maximiliano", "Leonel", "Felipe",
     "Darío", "Isaías", "Yael", "Luciano", "Jerónimo", "Bernardo",
@@ -34,7 +36,7 @@ const nombresMexicanos = [
     "Gaspar", "Hernán", "Isidro", "Justo", "Leandro", "Macario"
 ];
 
-const nombresEtiopes = [
+const nombresSecundarios = [
     "Abebe", "Bekele", "Tewodros", "Yohannes", "Haile", "Menelik",
     "Dawit", "Kaleb", "Ephrem", "Yared", "Abiy", "Girma", "Lemma",
     "Tilahun", "Almaz", "Aster", "Desta", "Genet", "Hiwot", "Mulu",
@@ -46,9 +48,9 @@ const nombresEtiopes = [
 ];
 
 function generar() {
-    var opcion = document.getElementById("opcion").value;
+    var opcionSeleccionada = document.getElementById("opcion").value;
 
-    switch (opcion) {
+    switch (opcionSeleccionada) {
         case "1": generarSQL(); break;
         case "2": generarSQL(); break;
         case "3": generarSQLCSV(); break;
@@ -57,117 +59,151 @@ function generar() {
 }
 
 function generarSQL() {
-    var salida = "INSERT INTO alumnos VALUES ", matricula = 224250000;
-    var nombre = "";
-    var registros = 0;
-    registros = document.getElementById('registros').value;
-    var nombreEtiope = "";
-    for (let i = 0; i < registros; i++) {
-        let apellidoMex = apellidosMexico[Math.floor(Math.random() * apellidosMexico.length)];
-        let apellidoAleman = apellidosAlemanes[Math.floor(Math.random() * apellidosAlemanes.length)];
+    contenidoGenerado = "INSERT INTO alumnos VALUES ";
+    var numeroMatricula = 224250000;
+    var nombreCompleto = "";
+    var cantidadRegistros = 0;
+    cantidadRegistros = document.getElementById('registros').value;
+    var nombreSecundario = "";
+
+    for (let i = 0; i < cantidadRegistros; i++) {
+        let apellidoPaterno = apellidosPaternos[Math.floor(Math.random() * apellidosPaternos.length)];
+        let apellidoMaterno = apellidosMaternos[Math.floor(Math.random() * apellidosMaternos.length)];
         let tieneSegundoNombre = Math.random() < 0.5;
         console.log(tieneSegundoNombre);
+
         let segundoApellido;
-        if (apellidoAleman === "NULL") {
+        if (apellidoMaterno === "NULL") {
             segundoApellido = "NULL";
         } else {
-            segundoApellido = `UPPER('${apellidoAleman}')`;
+            segundoApellido = `UPPER('${apellidoMaterno}')`;
         }
-        nombre = "";
-        nombreEtiope = "";
+
+        nombreCompleto = "";
+        nombreSecundario = "";
         if (tieneSegundoNombre == 0) {
-            nombre = nombresMexicanos[Math.floor(Math.random() * nombresMexicanos.length)];
+            nombreCompleto = nombresPrimarios[Math.floor(Math.random() * nombresPrimarios.length)];
         } else {
-            nombre = nombresMexicanos[Math.floor(Math.random() * nombresMexicanos.length)];
-            nombreEtiope = nombresEtiopes[Math.floor(Math.random() * nombresEtiopes.length)];
-            nombre += ` ${nombreEtiope}`;
+            nombreCompleto = nombresPrimarios[Math.floor(Math.random() * nombresPrimarios.length)];
+            nombreSecundario = nombresSecundarios[Math.floor(Math.random() * nombresSecundarios.length)];
+            nombreCompleto += ` ${nombreSecundario}`;
         }
-        salida += `(${matricula + i},
-                UPPER('${apellidoMex}'),
-                ${segundoApellido},
-                '${nombre}',
-                'a${matricula + i}@unison.mx'),<br>
-`;
+
+        contenidoGenerado += `(${numeroMatricula + i},UPPER('${apellidoPaterno}'), ${segundoApellido}, '${nombreCompleto}','a${numeroMatricula + i}@unison.mx'),\n\n`;
     }
-    salida = salida.slice(0, -6) + ";";
-    document.getElementById("salida").innerHTML = salida;
+
+    contenidoGenerado = contenidoGenerado.slice(0, -4) + ";";
+    document.getElementById("salida").innerHTML = contenidoGenerado;
 }
+
 function generarSQLpostgresql() {
 
 }
+
 function generarSQLCSV() {
-    var salida = "matricula, apellido1, apellido2, nombre, correo <br>", matricula = 224250000;
-    var nombre = "";
-    var registros = 0;
-    registros = document.getElementById('registros').value;
-    var nombreEtiope = "";
-    for (let i = 0; i < registros; i++) {
-        let apellidoMex = apellidosMexico[Math.floor(Math.random() * apellidosMexico.length)];
-        let apellidoAleman = apellidosAlemanes[Math.floor(Math.random() * apellidosAlemanes.length)];
+    contenidoGenerado = "matricula, apellido1, apellido2, nombre, correo\n";
+    var numeroMatricula = 224250000;
+    var nombreCompleto = "";
+    var cantidadRegistros = 0;
+    cantidadRegistros = document.getElementById('registros').value;
+    var nombreSecundario = "";
+
+    for (let i = 0; i < cantidadRegistros; i++) {
+        let apellidoPaterno = apellidosPaternos[Math.floor(Math.random() * apellidosPaternos.length)];
+        let apellidoMaterno = apellidosMaternos[Math.floor(Math.random() * apellidosMaternos.length)];
         let tieneSegundoNombre = Math.random() < 0.5;
         console.log(tieneSegundoNombre);
+
         let segundoApellido;
-        if (apellidoAleman === "NULL") {
+        if (apellidoMaterno === "NULL") {
             segundoApellido = "NULL";
         } else {
-            segundoApellido = `${apellidoAleman}`;
+            segundoApellido = `${apellidoMaterno}`;
         }
-        nombre = "";
-        nombreEtiope = "";
+
+        nombreCompleto = "";
+        nombreSecundario = "";
         if (tieneSegundoNombre == 0) {
-            nombre = nombresMexicanos[Math.floor(Math.random() * nombresMexicanos.length)];
+            nombreCompleto = nombresPrimarios[Math.floor(Math.random() * nombresPrimarios.length)];
         } else {
-            nombre = nombresMexicanos[Math.floor(Math.random() * nombresMexicanos.length)];
-            nombreEtiope = nombresEtiopes[Math.floor(Math.random() * nombresEtiopes.length)];
-            nombre += ` ${nombreEtiope}`;
+            nombreCompleto = nombresPrimarios[Math.floor(Math.random() * nombresPrimarios.length)];
+            nombreSecundario = nombresSecundarios[Math.floor(Math.random() * nombresSecundarios.length)];
+            nombreCompleto += ` ${nombreSecundario}`;
         }
-        salida += `${matricula + i},
-                ${apellidoMex},
-                ${segundoApellido},
-                ${nombre},
-                a${matricula + i}@unison.mx<br>
-`;
+
+        contenidoGenerado += `${numeroMatricula + i},${apellidoPaterno},${segundoApellido},${nombreCompleto},a${numeroMatricula + i}@unison.mx\n`;
     }
-    //salida = salida.slice(0, 0) + "";
-    document.getElementById("salida").innerHTML = salida;
+
+    document.getElementById("salida").innerHTML = contenidoGenerado;
 }
 
 function generarJSON() {
-    var salida = "json [<br>{<br>", matricula = 224250000;
-    var nombre = "";
-    var registros = 0;
-    registros = document.getElementById('registros').value;
-    var nombreEtiope = "";
-    for (let i = 0; i < registros; i++) {
-        let apellidoMex = apellidosMexico[Math.floor(Math.random() * apellidosMexico.length)];
-        let apellidoAleman = apellidosAlemanes[Math.floor(Math.random() * apellidosAlemanes.length)];
-        let tieneSegundoNombre = Math.random() < 0.5;
-        console.log(tieneSegundoNombre);
-        let segundoApellido;
-        if (apellidoAleman === "NULL") {
-            segundoApellido = "NULL";
-        } else {
-            segundoApellido = `${apellidoAleman}`;
-        }
-        nombre = "";
-        nombreEtiope = "";
-        if (tieneSegundoNombre == 0) {
-            nombre = nombresMexicanos[Math.floor(Math.random() * nombresMexicanos.length)];
-        } else {
-            nombre = nombresMexicanos[Math.floor(Math.random() * nombresMexicanos.length)];
-            nombreEtiope = nombresEtiopes[Math.floor(Math.random() * nombresEtiopes.length)];
-            nombre += ` ${nombreEtiope}`;
-        }
-        salida += `
-                "matricula": ${matricula + i},<br>
-                "apellido1": "${apellidoMex}",<br>
-                "apellido2": "${segundoApellido}",<br>
-                "nombre": "${nombre}",<br>
-                "correojson": "a${matricula + i}@unison.mx"<br>
-                },<br>`;
+    contenidoGenerado = "[\n";
+    var numeroMatricula = 224250000;
+    var cantidadRegistros = document.getElementById('registros').value;
 
+    for (let i = 0; i < cantidadRegistros; i++) {
+        let apellidoPaterno = apellidosPaternos[Math.floor(Math.random() * apellidosPaternos.length)];
+        let apellidoMaterno = apellidosMaternos[Math.floor(Math.random() * apellidosMaternos.length)];
+        let nombrePrimario = nombresPrimarios[Math.floor(Math.random() * nombresPrimarios.length)];
+
+        let nombreCompleto = nombrePrimario;
+        if (Math.random() < 0.5) {
+            let nombreSecundario = nombresSecundarios[Math.floor(Math.random() * nombresSecundarios.length)];
+            nombreCompleto += ` ${nombreSecundario}`;
+        }
+
+        contenidoGenerado += `  {\n`;
+        contenidoGenerado += `    "matricula": ${numeroMatricula + i},\n`;
+        contenidoGenerado += `    "apellido1": "${apellidoPaterno}",\n`;
+        contenidoGenerado += `    "apellido2": "${apellidoMaterno}",\n`;
+        contenidoGenerado += `    "nombre": "${nombreCompleto}",\n`;
+        contenidoGenerado += `    "correojson": "a${numeroMatricula + i}@unison.mx"\n`;
+
+        contenidoGenerado += (i < cantidadRegistros - 1) ? `  },\n` : `  }\n`;
     }
-    // salida = salida.slice(0, 0);
-    salida += `]`;
-    document.getElementById("salida").innerHTML = salida;
+
+    contenidoGenerado += "]";
+
+    document.getElementById('salida').innerHTML = contenidoGenerado.replace(/\n/g, "<br>");
+
+    return contenidoGenerado;
+}
+
+function guardarArchivo() {
+    let contenidoLimpio = contenidoGenerado.split('<br>').join('\n');
+
+    var archivoBlob = new Blob([contenidoLimpio], { type: "text/plain;charset=utf-8" });
+    var urlArchivo = URL.createObjectURL(archivoBlob);
+
+    var enlaceDescarga = document.createElement("a");
+    enlaceDescarga.setAttribute("href", urlArchivo);
+
+    var opcionSeleccionada = document.getElementById("opcion").value;
+
+    switch (opcionSeleccionada) {
+        case "1":
+            enlaceDescarga.setAttribute("download", "sistema_escolar.sql");
+            alert("Generando archivo SQL");
+            break;
+        case "2":
+            enlaceDescarga.setAttribute("download", "sistema_escolar.sql");
+            alert("Generando archivo Postgres");
+            break;
+        case "3":
+            enlaceDescarga.setAttribute("download", "sistema_escolar.csv");
+            alert("Generando archivo CSV");
+            break;
+        case "4":
+            enlaceDescarga.setAttribute("download", "sistema_escolar.json");
+            alert("Generando archivo JSON");
+            break;
+    }
+
+    enlaceDescarga.style.display = "none";
+    document.body.appendChild(enlaceDescarga);
+    enlaceDescarga.click();
+
+    document.body.removeChild(enlaceDescarga);
+    setTimeout(() => URL.revokeObjectURL(urlArchivo), 100);
 }
