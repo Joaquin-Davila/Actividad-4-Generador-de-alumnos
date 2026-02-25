@@ -1,25 +1,221 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Generador de alumnos</title>
-    <script src="./js/functions.js"></script>
+    <title>Generador de Alumnos</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --fondo:       #0b2d2a;
+            --panel:       #0f3d38;
+            --borde:       rgba(16,185,158,0.22);
+            --verde:       #10b99e;
+            --acento:      #00ffd5;
+            --texto:       #c8f5ef;
+            --texto-dim:   #6bbdb3;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background: var(--fondo);
+            font-family: 'DM Mono', monospace;
+            color: var(--texto);
+            min-height: 100vh;
+            padding: 48px 32px 80px;
+        }
+
+        .wrapper {
+            max-width: 780px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.8rem, 4vw, 2.8rem);
+            color: var(--acento);
+            margin-bottom: 36px;
+            letter-spacing: -0.01em;
+        }
+
+        /* ── Controles ── */
+        .fila {
+            display: flex;
+            gap: 16px;
+            align-items: flex-end;
+            flex-wrap: wrap;
+            margin-bottom: 16px;
+        }
+
+        .campo {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--texto-dim);
+        }
+
+        input[type="number"],
+        select {
+            background: rgba(6,24,22,0.8);
+            border: 1px solid var(--borde);
+            border-radius: 8px;
+            color: var(--texto);
+            font-family: 'DM Mono', monospace;
+            font-size: 13px;
+            padding: 10px 14px;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+
+        input[type="number"] { width: 160px; }
+
+        input[type="number"]:focus,
+        select:focus {
+            border-color: var(--acento);
+            box-shadow: 0 0 0 3px rgba(0,255,213,0.08);
+        }
+
+        select {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='https://www.freepik.com/free-photos-vectors/teal-background' width='12' height='8' fill='none'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%234dd9c4' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            padding-right: 34px;
+            cursor: pointer;
+            min-width: 210px;
+        }
+
+        select option { background: var(--panel); }
+
+        .btns-quick {
+            display: flex;
+            gap: 6px;
+        }
+
+        .btn-quick {
+            background: transparent;
+            border: 1px solid var(--borde);
+            border-radius: 6px;
+            color: var(--texto-dim);
+            font-family: 'DM Mono', monospace;
+            font-size: 11px;
+            padding: 6px 10px;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+
+        .btn-quick:hover {
+            border-color: var(--verde);
+            color: var(--texto);
+        }
+
+        .btn {
+            border: none;
+            border-radius: 8px;
+            font-family: 'DM Mono', monospace;
+            font-size: 13px;
+            padding: 11px 22px;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+
+        .btn-generar {
+            background: var(--verde);
+            color: #061a18;
+        }
+
+        .btn-generar:hover {
+            background: var(--acento);
+        }
+
+        .btn-guardar {
+            background: transparent;
+            color: var(--texto-dim);
+            border: 1px solid var(--borde);
+        }
+
+        .btn-guardar:hover {
+            border-color: var(--verde);
+            color: var(--texto);
+        }
+
+        #salida {
+            margin-top: 28px;
+            background: rgba(6,20,18,0.9);
+            border: 1px solid var(--borde);
+            border-radius: 10px;
+            padding: 20px;
+            font-size: 12.5px;
+            line-height: 1.85;
+            color: #a8f0e6;
+            white-space: pre-wrap;
+            word-break: break-all;
+            min-height: 60px;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        #salida:empty::before {
+            content: '// resultado aquí...';
+            color: rgba(107,189,179,0.3);
+            font-style: italic;
+        }
+
+        #salida::-webkit-scrollbar { width: 5px; }
+        #salida::-webkit-scrollbar-track { background: transparent; }
+        #salida::-webkit-scrollbar-thumb {
+            background: rgba(16,185,158,0.3);
+            border-radius: 3px;
+        }
+    </style>
 </head>
-
 <body>
-    numero de registros: <input type="number" id="registros" value="1" min="1" max="50000">
-    <input type="button" value="Registros 1" onclick="document.getElementById('registros').value=1;">
-    <input type="button" value="Registros 50000" onclick="document.getElementById('registros').value=50000;">
-    tipo de archivo <Select id="opcion">
-        <option value="1">SQL MySQL/MariaDB</option>
-        <option value="2">Postgresql</option>
-        <option value="3">CSV</option>
-        <option value="4">JSON</option>
-    </Select>
-    <input type="button" value="Generar" onclick="generar()">
-    <p id="salida"></p>
-</body>
+<div class="wrapper">
 
+    <h1>Generador de Alumnos</h1>
+
+    <div class="fila">
+        <div class="campo">
+            <label for="registros">Registros</label>
+            <input type="number" id="registros" value="1" min="1" max="50000">
+        </div>
+        <div class="campo">
+            <label>Acceso rápido</label>
+            <div class="btns-quick">
+                <button class="btn-quick" onclick="document.getElementById('registros').value=1">1</button>
+                <button class="btn-quick" onclick="document.getElementById('registros').value=100">100</button>
+                <button class="btn-quick" onclick="document.getElementById('registros').value=1000">1 000</button>
+                <button class="btn-quick" onclick="document.getElementById('registros').value=50000">50 000</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="fila">
+        <div class="campo">
+            <label for="opcion">Formato</label>
+            <select id="opcion">
+                <option value="1">SQL — MySQL / MariaDB</option>
+                <option value="2">SQL — PostgreSQL</option>
+                <option value="3">CSV</option>
+                <option value="4">JSON</option>
+            </select>
+        </div>
+        <button class="btn btn-generar" onclick="generar()">Generar</button>
+        <button class="btn btn-guardar" onclick="guardarArchivo()">Guardar</button>
+    </div>
+
+    <p id="salida"></p>
+
+</div>
+
+<script src="./js/functions.js"></script>
+</body>
 </html>
