@@ -79,20 +79,16 @@ function generarSQL() {
             segundoApellido = `UPPER('${apellidoMaterno}')`;
         }
 
-        nombreCompleto = "";
-        nombreSecundario = "";
-        if (tieneSegundoNombre == 0) {
-            nombreCompleto = nombresPrimarios[Math.floor(Math.random() * nombresPrimarios.length)];
-        } else {
-            nombreCompleto = nombresPrimarios[Math.floor(Math.random() * nombresPrimarios.length)];
+        nombreCompleto = nombresPrimarios[Math.floor(Math.random() * nombresPrimarios.length)];
+        if (tieneSegundoNombre) {
             nombreSecundario = nombresSecundarios[Math.floor(Math.random() * nombresSecundarios.length)];
             nombreCompleto += ` ${nombreSecundario}`;
         }
 
-        contenidoGenerado += `(${numeroMatricula + i},UPPER('${apellidoPaterno}'), ${segundoApellido}, '${nombreCompleto}','a${numeroMatricula + i}@unison.mx'),\n\n`;
+        contenidoGenerado += `(${numeroMatricula + i},UPPER('${apellidoPaterno}'), ${segundoApellido}, '${nombreCompleto}','a${numeroMatricula + i}@unison.mx'),\n`;
     }
 
-    contenidoGenerado = contenidoGenerado.slice(0, -4) + ";";
+    contenidoGenerado = contenidoGenerado.slice(0, -2) + ";";
     document.getElementById("salida").innerHTML = contenidoGenerado;
 }
 
@@ -121,12 +117,8 @@ function generarSQLCSV() {
             segundoApellido = `${apellidoMaterno}`;
         }
 
-        nombreCompleto = "";
-        nombreSecundario = "";
-        if (tieneSegundoNombre == 0) {
-            nombreCompleto = nombresPrimarios[Math.floor(Math.random() * nombresPrimarios.length)];
-        } else {
-            nombreCompleto = nombresPrimarios[Math.floor(Math.random() * nombresPrimarios.length)];
+        nombreCompleto = nombresPrimarios[Math.floor(Math.random() * nombresPrimarios.length)];
+        if (tieneSegundoNombre) {
             nombreSecundario = nombresSecundarios[Math.floor(Math.random() * nombresSecundarios.length)];
             nombreCompleto += ` ${nombreSecundario}`;
         }
