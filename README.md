@@ -70,10 +70,12 @@ No requiere instalar dependencias ni servidor.
 ## Capturas de pantalla
 
 ### Pantalla principal
-![Pantalla principal](imagenes/pantalla-principal.png)
+imagenes/principal1.png
+imagenes/principal2.png
 
 ### Tabla `alumnos` con los datos cargados
-![Tabla alumnos](imagenes/tabla-alumnos.png)
+imagenes/tabla1.png
+imagenes/tabla2.png
 
 ## Estructura del proyecto
 
